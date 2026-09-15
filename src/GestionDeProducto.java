@@ -1,14 +1,17 @@
+
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-
 /**
  *
  * @author user
  */
 public class GestionDeProducto extends javax.swing.JFrame {
-    
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(GestionDeProducto.class.getName());
 
     /**
@@ -16,6 +19,7 @@ public class GestionDeProducto extends javax.swing.JFrame {
      */
     public GestionDeProducto() {
         initComponents();
+
     }
 
     /**
@@ -109,9 +113,7 @@ public class GestionDeProducto extends javax.swing.JFrame {
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
+
             },
             new String [] {
                 "Nombre", "Categoria", "Precio"
@@ -126,7 +128,13 @@ public class GestionDeProducto extends javax.swing.JFrame {
             }
         });
         jTable1.setToolTipText("");
+        jTable1.getTableHeader().setReorderingAllowed(false);
         jScrollPane2.setViewportView(jTable1);
+        if (jTable1.getColumnModel().getColumnCount() > 0) {
+            jTable1.getColumnModel().getColumn(0).setResizable(false);
+            jTable1.getColumnModel().getColumn(1).setResizable(false);
+            jTable1.getColumnModel().getColumn(2).setResizable(false);
+        }
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -166,10 +174,48 @@ public class GestionDeProducto extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+
+        if (jTextField1.getText().isEmpty() || jTextField2.getText().trim().isEmpty()) {
+
+            JOptionPane.showMessageDialog(this, "Debe completar todos los campos.", "Atención", JOptionPane.WARNING_MESSAGE);
+        }
+
+        if (jComboBox1.getSelectedItem() == null) {
+            JOptionPane.showMessageDialog(this, "Debe seleccionar una categoría.", "Atención", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        String nombre = jTextField1.getText().trim();
+        String categoria = jComboBox1.getSelectedItem().toString();
+        double precio;
+
+        try {
+            precio = Double.parseDouble(jTextField2.getText().trim());
+            if (precio <= 0) {
+                JOptionPane.showMessageDialog(this, "Debe ingresar un precio mayor a 0.", "Atención", JOptionPane.WARNING_MESSAGE);
+                jTextField2.requestFocus();
+                return;
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Debe ingresar un número válido para el precio.", "Error de Formato", JOptionPane.ERROR_MESSAGE);
+            jTextField2.requestFocus();
+            return;
+        }
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        model.addRow(new Object[]{nombre, categoria, precio});
+        
+        
+        
+        jTextField1.setText("");
+        jTextField2.setText("");
+        jTextField1.requestFocus();
+
+
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
